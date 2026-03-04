@@ -68,16 +68,13 @@ export class HttpClient {
                             originalRequest.headers.Authorization = `Bearer ${token}`;
                             return this.client(originalRequest);
                         } catch (err) {
-                            console.log('err:', err);
                             return Promise.reject(err);
                         }
                     }
 
                     originalRequest._retry = true;
                     isRefreshing = true;
-                    console.log('interceptors: refreshOauth2Token start');
                     await this.refreshOauth2Token();
-                    console.log('interceptors: refreshOauth2Token end');
                     isRefreshing = false;
                     refreshSubscribers.forEach((subscriber) =>
                         subscriber(this.oauth2Token!.access_token)
@@ -277,7 +274,7 @@ export class HttpClient {
         const pageTitileRegResult = PAGE_TITLE_RE.exec(htmlStr);
         if (pageTitileRegResult) {
             const title = pageTitileRegResult[1];
-            console.log('login page title:', title);
+            // login page title check
             if (_.includes(title, 'Update Phone Number')) {
                 // current I don't know where to update it
                 // See:  https://github.com/matin/garth/issues/19
@@ -311,7 +308,6 @@ export class HttpClient {
             token: this.oauth1Token
         };
         await this.exchange(oauth1);
-        console.log('Oauth2 token refreshed!');
     }
 
     async getOauth1Token(ticket: string): Promise<IOauth1> {
